@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <body>
-    <h2>Генератор схем для вышивки</h2>
-    <form action="/generate" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit">Сгенерировать схему</button>
+    <h2>Настройки генератора</h2>
+    <form id="uploadForm">
+        <label>Картинка:</label>
+        <input type="file" id="fileInput" name="fileInput" required><br><br>
+
+        <label>Ширина:</label>
+        <input type="number" id="width" name="width" value="20" min="5" max="1024"><br><br>
+        
+        <label>Количество цветов:</label>
+        <input type="number" id="colors"name="colors" value="16" min="2" max="256"><br><br>
+        
+        <button type="button" onclick="generateImage()">Сгенерировать схему</button>
     </form>
+
+    <div id="resultContainer">
+        <img id="resultImage" style="display:none; width: 400px; image-rendering: pixelated; border: 5px solid #ccc;">
+    </div>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

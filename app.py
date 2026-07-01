@@ -1,15 +1,16 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from image_processor import generate_patterns_from_bytes
 import io
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.post("/generate")
-async def generate(file: UploadFile = File(...), scale: int = 20, colors: int = 16):
+async def generate(file: UploadFile = File(...), width: int = Form(...), colors: int = Form(...)):
     image_bytes = await file.read()
-    result_image = generate_patterns_from_bytes(image_bytes, scale, colors)
+    result_image = generate_patterns_from_bytes(image_bytes, width, colors)
     
     img_byte_arr = io.BytesIO()
     result_image.save(img_byte_arr, format="PNG")
