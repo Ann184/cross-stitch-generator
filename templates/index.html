@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор схем</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        #resultContainer { margin-top: 20px; overflow-x: auto; }
+        table { border-collapse: collapse; border: 2px solid #333; }
+        td { width: 25px; height: 25px; border: 0.5px solid #e0e0e0; padding: 0; }
+        form { background: #f4f4f9; padding: 15px; border-radius: 8px; display: inline-block; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
 <body>
     <h2>Настройки генератора</h2>
     <form id="uploadForm">
@@ -15,10 +28,8 @@
         <button type="button" onclick="generateImage()">Сгенерировать схему</button>
     </form>
 
-    <div id="resultContainer">
-        <img id="resultImage" style="display:none; width: 400px; image-rendering: pixelated; border: 5px solid #ccc;">
-    </div>
+    <div id="resultContainer"></div>
 
-    <script src="/static/script.js"></script>
+    <script src="/static/app-logic.js"></script>
 </body>
 </html>
