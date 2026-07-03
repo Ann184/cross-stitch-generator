@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw
-from file_utils import save_pallete
+from project.file_utils import save_pallete
 import io
 
 def generate_patterns_from_bytes(image_bytes, target_width, colors):
