@@ -6,14 +6,33 @@ async function generateImage(): Promise<void> {
 
     if (!fileInput.files || fileInput.files.length === 0) return;
 
-    const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
-    formData.append('width', widthInput.value);
-    formData.append('colors', colorsInput.value);
+    const btn = document.querySelector("button");
+    if (!btn) {return}
 
-    const response = await fetch('/generate', { method: 'POST', body: formData });
-    const data = await response.json();
-    renderGrid(data)
+    btn.disabled = true;
+    btn.textContent = "Генерация...";
+
+    try {
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('width', widthInput.value);
+        formData.append('colors', colorsInput.value);
+
+        const response = await fetch('/generate', { method: 'POST', body: formData });
+        if (!response.ok) {
+            alert("Произошла ошибка обработки изображения. Повторите попытку или выберите другой файл!")
+            return
+        }
+        const data = await response.json();
+        renderGrid(data)
+
+    } catch (error) {
+        alert("Что-то пошло не так при генерации схемы")
+    } finally {
+        btn.disabled = false;
+        btn.textContent ="Сгенерировать схему";
+    }
+    
 }
 
 interface PatternData {
