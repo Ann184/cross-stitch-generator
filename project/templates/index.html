@@ -3,33 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Генератор схем</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        #resultContainer { margin-top: 20px; overflow-x: auto; }
-        table { border-collapse: collapse; border: 2px solid #333; }
-        td { width: 25px; height: 25px; border: 0.5px solid #e0e0e0; padding: 0; }
-        form { background: #f4f4f9; padding: 15px; border-radius: 8px; display: inline-block; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        button:hover { background-color: #45a049; }
-    </style>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
+
 <body>
-    <h2>Настройки генератора</h2>
-    <form id="uploadForm">
-        <label>Картинка:</label>
-        <input type="file" id="fileInput" name="fileInput" required><br><br>
+    <header class="header">
+        <div class="logo">ГенераторСхем</div>
+        <nav>
+            <a href="#">Главная</a>
+            <a href="#">О сайте</a>
+        </nav>
+    </header>
 
-        <label>Ширина:</label>
-        <input type="number" id="width" name="width" value="20" min="5" max="1024"><br><br>
+    <main class="main-content">
+        <section class="card">
+            <h2>Настройки генератора</h2>
+            <form id="uploadForm">
+                <label for="fileInput">Картинка:</label>
+                <div class="file-upload-wrapper">
+                    <label for="fileInput" class="custom-file-button">
+                        📁 Выбрать файл
+                    </label>
+                    <input type="file" id="fileInput" name="fileInput" class="hidden-input" required>
+                    <span id="fileName">Файл не выбран</span>
+                </div>
+
+                <div class="settings-row">
+                    <div class="field-group">
+                        <label for="width">📏 Ширина:</label>
+                        <input type="number" id="width" name="width" value="20" min="5" max="1024">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label for="colors">🎨 Цвета:</label>
+                        <input type="number" id="colors" name="colors" value="16" min="2" max="256">
+                    </div>
+                </div>
+                
+                <button type="button" id="buttonGenerate">Сгенерировать схему</button>
+            </form>
+
+            <div class="zoom-controls">
+                <button type="button" class="buttonZoom" data-action="in">+</button>
+                <button type="button" class="buttonZoom" data-action="out">-</button>
+            </div>
+        </section>
         
-        <label>Количество цветов:</label>
-        <input type="number" id="colors"name="colors" value="16" min="2" max="256"><br><br>
-        
-        <button type="button" onclick="generateImage()">Сгенерировать схему</button>
-    </form>
+        <section class="card" id="resultContainer">
+        </section>
+    </main>
 
-    <div id="resultContainer"></div>
-
-    <script src="/static/app-logic.js"></script>
+    <footer class="footer">
+        <p>© 2026</p>
+        <div class="footer-links">
+            <a href="#">Карта сайта</a>
+        </div>
+    </footer>
+    
+    <script src="/static/js/app-logic.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": "project/src",
-    "outDir": "project/static"
+    "outDir": "project/static/js"
   },
   "include": ["project/src/**/*"]
 }

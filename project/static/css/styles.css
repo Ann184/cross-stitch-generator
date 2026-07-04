@@ -1,0 +1,168 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --cell-size: 25px;
+    --bg-color: #fdf6f7;
+    --card-bg: #ffffff;
+    --accent-pink: #ffb7c5;
+    --text-color: #5d5d5d;
+    --shadow: 0 8px 24px rgba(255, 183, 197, 0.2);
+}
+
+body { 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    align-items: center;
+}
+
+.header, footer {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: bold;
+    color: var(--accent-pink);
+    font-size: 1.2rem;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+}
+
+#uploadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input[type="number"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--accent-pink);
+}
+
+.settings-row {
+    display: flex;
+    gap: 15px;
+}
+
+.field-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+#buttonGenerate {
+    background-color: var(--accent-pink);
+    color: white;
+}
+
+#buttonGenerate:hover {
+    filter: brightness(95%);
+    transform: translateY(-2px);
+}
+
+.buttonZoom {
+    background-color: transparent;
+    border: 1px solid var(--accent-pink);
+    color: var(--accent-pink);
+    margin-right: 10px;
+}
+
+.buttonZoom:hover {
+    background-color: var(--accent-pink);
+    color: white;
+}
+
+.hidden-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+.custom-file-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--accent-pink);
+    color: var(--accent-pink);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-file-button:hover {
+    background-color: var(--accent-pink);
+    color: white;
+}
+
+#resultContainer { 
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; 
+    min-height: 200px;
+    padding: 20px;
+}
+
+table { border-collapse: collapse; }
+
+td { 
+    width: var(--cell-size); 
+    height: var(--cell-size); 
+    border: 0.5px solid #e0e0e0; 
+}
+
+td:hover { outline: 2px solid var(--accent-pink); }
+td:nth-child(10n) { border-right: 2px solid #333; }
+tr:nth-child(10n) td { border-bottom: 2px solid #333; }
