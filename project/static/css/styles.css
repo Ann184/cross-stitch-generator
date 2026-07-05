@@ -102,6 +102,10 @@ button {
 #buttonGenerate {
     background-color: var(--accent-pink);
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 #buttonGenerate:hover {
@@ -131,6 +135,29 @@ button {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner { 
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.hidden {
+    display: none;
+}
+
 .custom-file-button {
     display: inline-block;
     padding: 10px 20px;
@@ -153,6 +180,8 @@ button {
     overflow-x: auto; 
     min-height: 200px;
     padding: 20px;
+    opacity: 0;
+    transition: all 0.5s;
 }
 
 table { border-collapse: collapse; }

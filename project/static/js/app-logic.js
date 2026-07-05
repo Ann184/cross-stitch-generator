@@ -47,12 +47,22 @@ async function generateImage() {
     const colorsInput = document.getElementById('colors');
     if (!fileInput.files || fileInput.files.length === 0)
         return;
+    if (Number(widthInput.value) < 5) {
+        alert("Размер сетки не может быть меньше 5!");
+        return;
+    }
+    else if (Number(colorsInput.value) < 1) {
+        alert("Цветов не может быть меньше 1!");
+        return;
+    }
     const btn = document.getElementById("buttonGenerate");
     if (!btn) {
         return;
     }
     btn.disabled = true;
     btn.textContent = "Генерация...";
+    const loader = document.getElementById("loader");
+    loader?.classList.remove('hidden');
     try {
         const formData = new FormData();
         formData.append('file', fileInput.files[0]);
@@ -72,6 +82,7 @@ async function generateImage() {
     finally {
         btn.disabled = false;
         btn.textContent = "Сгенерировать схему";
+        loader?.classList.add('hidden');
     }
 }
 async function renderGrid(data) {
@@ -79,6 +90,7 @@ async function renderGrid(data) {
     if (!container)
         return;
     container.innerHTML = '';
+    container.style.opacity = "0";
     const table = document.createElement('table');
     const tbody = document.createElement('tbody');
     for (let i = 0; i < data.height; i++) {
@@ -92,4 +104,5 @@ async function renderGrid(data) {
     }
     table.appendChild(tbody);
     container.appendChild(table);
+    container.style.opacity = "1";
 }

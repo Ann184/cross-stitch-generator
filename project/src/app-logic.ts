@@ -54,6 +54,14 @@ async function generateImage(): Promise<void> {
     const colorsInput = document.getElementById('colors') as HTMLInputElement;
 
     if (!fileInput.files || fileInput.files.length === 0) return;
+
+    if (Number(widthInput.value) < 5) {
+            alert("Размер сетки не может быть меньше 5!")
+            return
+        } else if (Number(colorsInput.value) < 1) {
+            alert("Цветов не может быть меньше 1!")
+            return
+        }
     
 
     const btn = document.getElementById("buttonGenerate") as HTMLInputElement;
@@ -61,6 +69,9 @@ async function generateImage(): Promise<void> {
 
     btn.disabled = true;
     btn.textContent = "Генерация...";
+
+    const loader = document.getElementById("loader");
+    loader?.classList.remove('hidden');
 
     try {
         const formData = new FormData();
@@ -81,6 +92,7 @@ async function generateImage(): Promise<void> {
     } finally {
         btn.disabled = false;
         btn.textContent ="Сгенерировать схему";
+        loader?.classList.add('hidden');
     }
     
 }
@@ -95,6 +107,7 @@ async function renderGrid(data:PatternData){
     const container = document.getElementById('resultContainer');
     if (!container) return;
     container.innerHTML = '';
+    container.style.opacity = "0";
 
     const table = document.createElement('table');
     const tbody = document.createElement('tbody');
@@ -110,4 +123,5 @@ async function renderGrid(data:PatternData){
     }
     table.appendChild(tbody);
     container.appendChild(table);
+    container.style.opacity = "1";
 }
