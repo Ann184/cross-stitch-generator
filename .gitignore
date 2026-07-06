@@ -12,3 +12,6 @@ __pycache__/
 pallete.txt
 
 project/static/js/
+
+.vite/
+/dist

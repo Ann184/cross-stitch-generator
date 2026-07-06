@@ -15,5 +15,5 @@ async def generate(file: UploadFile = File(...), width: int = Form(...), colors:
 
 @app.get("/", response_class=HTMLResponse)
 async def get_form():
-    with open("project/templates/index.html", "r", encoding="utf-8") as f:
+    with open("project/index.html", "r", encoding="utf-8") as f:
         return f.read()
