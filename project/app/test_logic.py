@@ -1,4 +1,4 @@
-from project.image_processor import generate_patterns_from_bytes
+from project.app.image_processor import generate_patterns_from_bytes
 
 SCALE = 20
 COLORS = 16
