@@ -16,7 +16,7 @@
     </header>
 
     <main class="main-content">
-        <section class="card setting-carg">
+        <section class="card setting-card">
             <h2>Настройки генератора</h2>
             <form id="uploadForm">
                 <label for="fileInput">Картинка:</label>
@@ -40,8 +40,10 @@
                     </div>
                 </div>
                 
-                <button type="button" id="buttonGenerate">Сгенерировать схему</button>
-                <div id="loader" class="hidden spinner"></div>
+                <button type="button" id="buttonGenerate">
+                    <span id="buttonText">Сгенерировать схему</span>
+                    <div id="loader" class="hidden spinner"></div>
+                </button>
             </form>
 
             <div class="zoom-controls">

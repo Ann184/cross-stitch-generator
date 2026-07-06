@@ -5,9 +5,12 @@ export function toggleLoader(show: boolean) {
 
 export function setGenerateButtonState(disabled: boolean) {
     const btn = document.getElementById("buttonGenerate") as HTMLButtonElement;
+    const textSpan = document.getElementById("buttonTect");
     if (btn) {
         btn.disabled = disabled;
-        btn.textContent = disabled ? "Генерация..." : "Сгенерировать схему";
+        if (textSpan) {
+            btn.textContent = disabled ? "Генерация..." : "Сгенерировать схему";
+        }  
     }
 }
 
