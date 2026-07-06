@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "rootDir": "project/src",
-    "outDir": "project/static/js"
+    "outDir": "project/static/js",
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler", 
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": ["project/src/**/*"]
 }

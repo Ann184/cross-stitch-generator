@@ -1,3 +1,5 @@
+import { uploadImage } from './api.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut } from './ui.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("buttonGenerate")?.addEventListener("click", generateImage);
@@ -26,28 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 })
 
-function getCellSize(): number {
-    const rootStyles = getComputedStyle(document.documentElement);
-    const size = rootStyles.getPropertyValue('--cell-size').replace('px', '');
-    return parseInt(size) || 25;
-}
-
-function setCellSize(size: number) {
-    document.documentElement.style.setProperty('--cell-size', `${size}px`);
-}
-
-function zoomIn(): void {
-    const currentSize = getCellSize();
-    setCellSize(currentSize + 5);
-}
-
-function zoomOut(): void {
-    const currentSize = getCellSize();
-    if (currentSize > 5) {
-        setCellSize(currentSize - 5);
-    }
-}
-
 async function generateImage(): Promise<void> {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const widthInput = document.getElementById('width') as HTMLInputElement;
@@ -67,11 +47,8 @@ async function generateImage(): Promise<void> {
     const btn = document.getElementById("buttonGenerate") as HTMLInputElement;
     if (!btn) {return}
 
-    btn.disabled = true;
-    btn.textContent = "Генерация...";
-
-    const loader = document.getElementById("loader");
-    loader?.classList.remove('hidden');
+    setGenerateButtonState(true);
+    toggleLoader(true);
 
     try {
         const formData = new FormData();
@@ -79,49 +56,14 @@ async function generateImage(): Promise<void> {
         formData.append('width', widthInput.value);
         formData.append('colors', colorsInput.value);
 
-        const response = await fetch('/generate', { method: 'POST', body: formData });
-        if (!response.ok) {
-            alert("Произошла ошибка обработки изображения. Повторите попытку или выберите другой файл!")
-            return
-        }
-        const data = await response.json();
+        const data = await uploadImage(formData);
         renderGrid(data)
 
     } catch (error) {
         alert("Что-то пошло не так при генерации схемы")
     } finally {
-        btn.disabled = false;
-        btn.textContent ="Сгенерировать схему";
-        loader?.classList.add('hidden');
+        setGenerateButtonState(false);
+        toggleLoader(false);
     }
     
-}
-
-interface PatternData {
-    grid: string[][];
-    width: number;
-    height: number;
-}
-
-async function renderGrid(data:PatternData){
-    const container = document.getElementById('resultContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    container.style.opacity = "0";
-
-    const table = document.createElement('table');
-    const tbody = document.createElement('tbody');
-
-    for (let i = 0; i < data.height; i++) {
-        const tr = document.createElement('tr');
-        for (let j = 0; j < data.width; j++) {
-            const td = document.createElement('td');
-            td.style.backgroundColor = data.grid[i][j];
-            tr.appendChild(td);
-        }
-        tbody.appendChild(tr);
-    }
-    table.appendChild(tbody);
-    container.appendChild(table);
-    container.style.opacity = "1";
 }
