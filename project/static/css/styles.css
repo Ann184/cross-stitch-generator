@@ -226,6 +226,7 @@ td {
     padding: 0px;
     min-width: var(--cell-size);
     min-height: var(--cell-size);
+    transition: width 0.2s, height 0.2s;
 }
 
 td:hover { outline: 2px solid var(--accent-pink); }

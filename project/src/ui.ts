@@ -5,13 +5,14 @@ export function toggleLoader(show: boolean) {
 
 export function setGenerateButtonState(disabled: boolean) {
     const btn = document.getElementById("buttonGenerate") as HTMLButtonElement;
-    const textSpan = document.getElementById("buttonTect");
+    const textSpan = document.getElementById("buttonText");
     if (btn) {
-        btn.disabled = disabled;
-        if (textSpan) {
-            btn.textContent = disabled ? "Генерация..." : "Сгенерировать схему";
-        }  
+        btn.disabled = disabled; 
     }
+
+    if (textSpan) {
+            textSpan.textContent = disabled ? "Генерация..." : "Сгенерировать схему";
+    } 
 }
 
 function getCellSize(): number {
@@ -45,22 +46,32 @@ interface PatternData {
 export async function renderGrid(data:PatternData){
     const container = document.getElementById('resultContainer');
     if (!container) return;
-    container.innerHTML = '';
-    container.style.opacity = "0";
 
-    const table = document.createElement('table');
-    const tbody = document.createElement('tbody');
+    let canvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'gridCanvas';
+        container?.appendChild(canvas);
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
+    canvas.width = data.width * cellSize;
+    canvas.height = data.height * cellSize;
+
+    ctx.clearRect(0,0, canvas.width, canvas.height);
 
     for (let i = 0; i < data.height; i++) {
-        const tr = document.createElement('tr');
         for (let j = 0; j < data.width; j++) {
-            const td = document.createElement('td');
-            td.style.backgroundColor = data.grid[i][j];
-            tr.appendChild(td);
+            ctx.fillStyle = data.grid[i][j];
+            ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+            
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize)
         }
-        tbody.appendChild(tr);
     }
-    table.appendChild(tbody);
-    container.appendChild(table);
     container.style.opacity = "1";
 }

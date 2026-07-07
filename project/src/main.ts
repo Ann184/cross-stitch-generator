@@ -1,6 +1,8 @@
 import { uploadImage } from './api.js';
 import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut } from './ui.js';
 
+let currentPatternData: any = null;
+
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("buttonGenerate")?.addEventListener("click", generateImage);
 
@@ -11,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 zoomIn();
             } else {
                 zoomOut();
+            }
+
+            if (currentPatternData) {
+                renderGrid(currentPatternData);
             }
         })
     })
@@ -57,7 +63,8 @@ async function generateImage(): Promise<void> {
         formData.append('colors', colorsInput.value);
 
         const data = await uploadImage(formData);
-        renderGrid(data)
+        currentPatternData = data;
+        renderGrid(currentPatternData)
 
     } catch (error) {
         alert("Что-то пошло не так при генерации схемы")
