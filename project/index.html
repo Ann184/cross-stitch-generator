@@ -8,15 +8,16 @@
 
 <body>
     <div class="app-container">
+        
+        <header class="sidebar-header">
+            <div class="logo">ГенераторСхем</div>
+            <nav>
+                <a href="#">Главная</a>
+                <a href="#">О сайте</a>
+            </nav>
+        </header>
+
         <aside class="sidebar">
-            <header class="sidebar-header">
-        <div class="logo">ГенераторСхем</div>
-        <nav>
-            <a href="#">Главная</a>
-            <a href="#">О сайте</a>
-        </nav>
-    </header>
-            
             <section class="card">
                 <h3>Настройки генератора</h3>
                 <form id="uploadForm">
@@ -40,7 +41,7 @@
                             <input type="number" id="colors" value="16" min="2" max="256">
                         </div>
                     </div>
-                    
+
                     <button type="button" id="buttonGenerate">
                         <span id="buttonText">Сгенерировать схему</span>
                         <div id="loader" class="hidden spinner"></div>
