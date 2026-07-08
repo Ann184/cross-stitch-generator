@@ -7,63 +7,75 @@
 </head>
 
 <body>
-    <header class="header">
+    <div class="app-container">
+        <aside class="sidebar">
+            <header class="sidebar-header">
         <div class="logo">ГенераторСхем</div>
         <nav>
             <a href="#">Главная</a>
             <a href="#">О сайте</a>
         </nav>
     </header>
+            
+            <section class="card">
+                <h3>Настройки генератора</h3>
+                <form id="uploadForm">
+                    <label for="fileInput">Картинка:</label>
+                    <div class="file-upload-wrapper">
+                        <label for="fileInput" class="custom-file-button">
+                            📁 Выбрать файл
+                        </label>
+                        <input type="file" id="fileInput" class="hidden-input" required>
+                        <span id="fileName">Файл не выбран</span>
+                    </div>
 
-    <main class="main-content">
-        <section class="card setting-card">
-            <h2>Настройки генератора</h2>
-            <form id="uploadForm">
-                <label for="fileInput">Картинка:</label>
-                <div class="file-upload-wrapper">
-                    <label for="fileInput" class="custom-file-button">
-                        📁 Выбрать файл
-                    </label>
-                    <input type="file" id="fileInput" name="fileInput" class="hidden-input" required>
-                    <span id="fileName">Файл не выбран</span>
-                </div>
+                    <div class="settings-row">
+                        <div class="field-group">
+                            <label for="width">📏 Ширина:</label>
+                            <input type="number" id="width" value="20" min="5" max="1024">
+                        </div>
 
-                <div class="settings-row">
-                    <div class="field-group">
-                        <label for="width">📏 Ширина:</label>
-                        <input type="number" id="width" name="width" value="20" min="5" max="1024">
+                        <div class="field-group">
+                            <label for="colors">🎨 Цвета:</label>
+                            <input type="number" id="colors" value="16" min="2" max="256">
+                        </div>
                     </div>
                     
-                    <div class="field-group">
-                        <label for="colors">🎨 Цвета:</label>
-                        <input type="number" id="colors" name="colors" value="16" min="2" max="256">
-                    </div>
+                    <button type="button" id="buttonGenerate">
+                        <span id="buttonText">Сгенерировать схему</span>
+                        <div id="loader" class="hidden spinner"></div>
+                    </button>
+                </form>
+            </section>
+
+            <section class="card">
+                <h3>Масштаб</h3>
+                <div class="zoom-controls">
+                    <button type="button" class="buttonZoom" data-action="in">+</button>
+                    <button type="button" class="buttonZoom" data-action="out">-</button>
                 </div>
-                
-                <button type="button" id="buttonGenerate">
-                    <span id="buttonText">Сгенерировать схему</span>
-                    <div id="loader" class="hidden spinner"></div>
-                </button>
-            </form>
+            </section>
 
-            <div class="zoom-controls">
-                <button type="button" class="buttonZoom" data-action="in">+</button>
-                <button type="button" class="buttonZoom" data-action="out">-</button>
+            <section class="card">
+                <h3>Палитра и расход</h3>
+                <div id="paletteContainer"></div>
+            </section>
+        </aside>
+
+        <main class="viewer">
+            <div id="resultContainer">
+                <canvas id="gridCanvas"></canvas>
             </div>
-        </section>
-        
-        <section class="card" id="resultContainer">
-            <canvas id="gridCanvas"></canvas>
-        </section>
-    </main>
+        </main>
 
-    <footer class="footer">
-        <p>© 2026</p>
-        <div class="footer-links">
-            <a href="#">Карта сайта</a>
-        </div>
-    </footer>
-    
+        <footer class="footer">
+            <p>© 2026</p>
+            <div class="footer-links">
+                <a href="#">Карта сайта</a>
+            </div>
+        </footer>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

@@ -13,23 +13,32 @@
     --shadow: 0 8px 24px rgba(255, 183, 197, 0.2);
 }
 
-body { 
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    align-items: center;
+    overflow: hidden;
 }
 
-.header, footer {
-    width: 100%;
-    max-width: 800px;
-    padding: 20px 40px;
+.footer {
+    grid-column: 2;
+    background: white;
+    padding: 10px 40px;
+    border-top: 1px solid #ffccd5;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 5px 10px 5px;
+    border-bottom: 1px solid #ffccd5;
+    margin-bottom: 10px;
 }
 
 .logo {
@@ -48,13 +57,11 @@ body {
 }
 
 .card {
-    width: 600px;
-    margin: 20px auto;
+    width: 100%;
     padding: 20px;
-    border: 2px solid #ffccd5;
-    border-radius: 15px;
+    border: 1px solid #ffccd5;
+    border-radius: 12px;
     background-color: white;
-    box-sizing: border-box;
 }
 
 .settings-card {
@@ -64,17 +71,51 @@ body {
     gap: 15px;
 }
 
-#resultContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    overflow: auto;
-    max-height: 600px;
-    min-height: 200px;
+.app-container {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.sidebar {
+    grid-row: 1 / 3;
     padding: 20px;
-    opacity: 0;
-    transition: all 0.5s;
-    box-sizing: border-box;
+    background: var(--bg-color);
+    border-right: 1px solid #ffccd5;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar .card {
+    width: 100%;
+    margin: 0 0 20px 0;
+    border: 1px solid #ffccd5;
+    border-radius: 12px;
+    background: white;
+    padding: 15px;
+}
+
+.viewer {
+    grid-column: 2;
+    overflow: auto;
+    padding: 40px;
+    background-color: #fce8ed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#resultContainer {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(255, 183, 197, 0.3);
+    border: 2px solid var(--accent-pink);
 }
 
 #resultContainer img {
