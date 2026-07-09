@@ -1,3 +1,5 @@
+import { PaletteCollor } from "./palette";
+
 export function toggleLoader(show: boolean) {
     const loader = document.getElementById("loader");
     loader?.classList.toggle('hidden', !show);
@@ -74,4 +76,18 @@ export async function renderGrid(data:PatternData){
         }
     }
     container.style.opacity = "1";
+}
+
+export function renderPalette(palette: PaletteCollor[]) {
+    const container = document.getElementById('paletteContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+    palette.forEach((item) => {
+        const colorItem = document.createElement('div');
+        colorItem.className = 'palette-item';
+        colorItem.style.backgroundColor = item.hex;
+        colorItem.innerHTML = `<span>${item.count}</span>`;
+        container.appendChild(colorItem);
+    });
 }

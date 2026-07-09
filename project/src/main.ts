@@ -1,5 +1,6 @@
 import { uploadImage } from './api.js';
-import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut } from './ui.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette } from './ui.js';
+import { getCountColor, PaletteCollor } from './palette.js';
 
 let currentPatternData: any = null;
 
@@ -64,6 +65,9 @@ async function generateImage(): Promise<void> {
 
         const data = await uploadImage(formData);
         currentPatternData = data;
+
+        const palette = getCountColor(data.grid);
+        renderPalette(palette);
         renderGrid(currentPatternData)
 
     } catch (error) {
