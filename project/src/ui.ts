@@ -84,10 +84,18 @@ export function renderPalette(palette: PaletteCollor[]) {
 
     container.innerHTML = '';
     palette.forEach((item) => {
+        const rgbColor = item.rgb 
+            ? `rgb(${item.rgb.map(c => Math.round(c * 255)).join(',')})`
+            : item.hex;
         const colorItem = document.createElement('div');
         colorItem.className = 'palette-item';
-        colorItem.style.backgroundColor = item.hex;
-        colorItem.innerHTML = `<span>${item.count}</span>`;
+        colorItem.style.backgroundColor = rgbColor;
+        colorItem.innerHTML = `
+            <div class="color-info">
+                <strong>${item.name || 'Неизвестный'}</strong>
+                <span>${item.count} крестиков</span>
+            </div>
+        `;
         container.appendChild(colorItem);
     });
 }
