@@ -78,24 +78,25 @@ export async function renderGrid(data:PatternData){
     container.style.opacity = "1";
 }
 
-export function renderPalette(palette: PaletteCollor[]) {
+export function renderPalette(paletteList: PaletteCollor[]) {
     const container = document.getElementById('paletteContainer');
     if (!container) return;
-
-    container.innerHTML = '';
-    palette.forEach((item) => {
+    
+    paletteList.forEach((item) => {
         const rgbColor = item.rgb 
             ? `rgb(${item.rgb.map(c => Math.round(c * 255)).join(',')})`
             : item.hex;
-        const colorItem = document.createElement('div');
-        colorItem.className = 'palette-item';
-        colorItem.style.backgroundColor = rgbColor;
-        colorItem.innerHTML = `
-            <div class="color-info">
-                <strong>${item.name || 'Неизвестный'}</strong>
-                <span>${item.count} крестиков</span>
+
+        const row = document.createElement('div');
+        row.className = 'palette-row';
+        
+        row.innerHTML = `
+            <div class="color-box" style="background-color: ${rgbColor}"></div>
+            <div class="color-text">
+                <span class="color-name">${item.name || 'Неизвестный'}</span>
+                <span class="color-count">${item.count} крестиков</span>
             </div>
         `;
-        container.appendChild(colorItem);
+        container.appendChild(row);
     });
 }
