@@ -3,6 +3,7 @@ import paletteData from '../assets/dmc_palette.json';
 export interface PaletteCollor {
     hex: string;
     count: number;
+    id?: string,
     name?: string;
     rgb?: number[];
 }
@@ -46,7 +47,7 @@ export function enrichPalette(counts: PaletteCollor[]) {
         const serverRgb = hexToRgb(item.hex);
         
         let minDistance = Infinity;
-        let bestMatch = { name: "Unknown", rgb: [0, 0, 0] };
+        let bestMatch = { id: "0", name: "Unknown", rgb: [0, 0, 0] };
 
         // Ищем в нашем JSON наиболее похожий цвет
         for (const id in paletteData) {
@@ -56,12 +57,13 @@ export function enrichPalette(counts: PaletteCollor[]) {
             const dist = getDistance(serverRgb, paletteRgb);
             if (dist < minDistance) {
                 minDistance = dist;
-                bestMatch = entry;
+                bestMatch = { ...entry, id };
             }
         }
 
         return {
             ...item,
+            id: bestMatch.id,
             name: bestMatch.name,
             rgb: bestMatch.rgb
         };

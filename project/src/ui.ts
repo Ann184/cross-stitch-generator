@@ -81,6 +81,8 @@ export async function renderGrid(data:PatternData){
 export function renderPalette(paletteList: PaletteCollor[]) {
     const container = document.getElementById('paletteContainer');
     if (!container) return;
+
+    container.innerHTML = '';
     
     paletteList.forEach((item) => {
         const rgbColor = item.rgb 
@@ -92,11 +94,50 @@ export function renderPalette(paletteList: PaletteCollor[]) {
         
         row.innerHTML = `
             <div class="color-box" style="background-color: ${rgbColor}"></div>
-            <div class="color-text">
-                <span class="color-name">${item.name || 'Неизвестный'}</span>
+            <div class="color-info-wrapper">
+                <div class="color-main">
+                    <span class="color-name">${item.name || 'Неизвестный'}</span>
+                    <span class="color-dmc">DMC ${item.id || '---'}</span>
+                </div>
                 <span class="color-count">${item.count} крестиков</span>
             </div>
         `;
         container.appendChild(row);
     });
+}
+
+export function setupGridInteractions(data: PatternData, palette: PaletteCollor[]) {
+    const canvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    const tooltip = document.getElementById('tooltip');
+    if (!canvas || !tooltip) return;
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
+  
+        const x = Math.floor((e.clientX - rect.left) / cellSize);
+        const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
+            const hex = data.grid[y][x];
+            const colorInfo = palette.find(p => p.hex === hex);
+            
+            if (colorInfo) {
+                tooltip.style.left = `${e.clientX + 10}px`;
+                tooltip.style.top = `${e.clientY + 10}px`;
+                tooltip.classList.remove('hidden');
+                tooltip.innerHTML = `
+                    <div style="font-weight: bold; border-bottom: 1px solid #fff; margin-bottom: 4px; padding-bottom: 2px;">
+                        ${colorInfo.name}
+                    </div>
+                    <div>Номер нити: <strong>${colorInfo.id || 'N/A'}</strong></div>
+                    <div>Крестиков: <strong>${colorInfo.count}</strong></div>
+                `;
+                return;
+            }
+        }
+        tooltip.classList.add('hidden');
+    });
+
+    canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
 }

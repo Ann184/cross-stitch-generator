@@ -79,6 +79,19 @@ body, html {
     margin-bottom: 20px;
 }
 
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+
+    z-index: 100;
+    white-space: nowrap;
+}
+
 #resultContainer {
     background: white;
     padding: 30px;
@@ -134,19 +147,44 @@ body, html {
     flex-shrink: 0;
 }
 
-.color-text {
+.color-info-wrapper {
     display: flex;
     flex-direction: column;
-    font-size: 16px;
+    flex-grow: 1;
+    margin-left: 12px;
+}
+
+.color-main {
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    gap: 15px;
+    width: 100%;
 }
 
 .color-name {
     font-weight: 600;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+}
+
+.color-dmc {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--accent-pink);
+    background: #fff0f3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 60px;
 }
 
 .color-count {
     color: #888;
     font-size: 13px;
+    margin-top: 2px;
 }
 
 input[type="number"], input[type="file"] {

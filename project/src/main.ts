@@ -1,6 +1,6 @@
 import { uploadImage } from './api.js';
-import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette } from './ui.js';
-import { enrichPalette, getCountColor, PaletteCollor } from './palette.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions } from './ui.js';
+import { enrichPalette, getCountColor } from './palette.js';
 
 let currentPatternData: any = null;
 
@@ -70,6 +70,7 @@ async function generateImage(): Promise<void> {
         const datailedPalette = enrichPalette(rawCounts);
         renderPalette(datailedPalette);
         renderGrid(currentPatternData)
+        setupGridInteractions(currentPatternData, datailedPalette);
 
     } catch (error) {
         alert("Что-то пошло не так при генерации схемы")
