@@ -1,6 +1,7 @@
 import { PaletteCollor } from "./palette";
 
 let activeColorHex: string | null = null;
+let stitchedCells: boolean[][] = [];
 
 export function toggleLoader(show: boolean) {
     const loader = document.getElementById("loader");
@@ -39,6 +40,10 @@ export function zoomOut(): void {
     if (currentSize > 5) {
         setCellSize(currentSize - 5);
     }
+}
+
+export function initStitchedCells(width: number, height: number) {
+    stitchedCells = Array.from({ length: height }, () => Array(width).fill(false));
 }
 
 interface PatternData {
@@ -83,6 +88,17 @@ export async function renderGrid(data:PatternData){
                 ctx.strokeStyle = "#ff8da2";
                 ctx.lineWidth = 2;
                 ctx.strokeRect(j * cellSize + 1, i * cellSize + 1, cellSize - 2, cellSize - 2);
+            }
+
+            if (stitchedCells[i] && stitchedCells[i][j]) {
+                ctx.strokeStyle = "#444";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(j * cellSize + 5, i * cellSize + 5);
+                ctx.lineTo(j * cellSize + cellSize - 5, i * cellSize + cellSize - 5);
+                ctx.moveTo(j * cellSize + cellSize - 5, i * cellSize + 5);
+                ctx.lineTo(j * cellSize + 5, i * cellSize + cellSize - 5);
+                ctx.stroke();
             }
         }
     }
@@ -161,10 +177,38 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
     const tooltip = document.getElementById('tooltip');
     if (!canvas || !tooltip) return;
 
-    canvas.addEventListener('mousemove', (e) => {
+    let isDrawing = false;
+    let drawMode: boolean | null = null;
+
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
         const rect = canvas.getBoundingClientRect();
         const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
-  
+        
+        const x = Math.floor((e.clientX - rect.left) / cellSize);
+        const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
+            if (e.button === 0) {
+                stitchedCells[y][x] = true;
+            } else if (e.button === 2) {
+                stitchedCells[y][x] = false;
+            }
+            renderGrid(data);
+        }
+        drawMode = e.button === 0;
+        applyStitch(e);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) {
+            applyStitch(e);
+        }
+        const rect = canvas.getBoundingClientRect();
+        const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
+        
         const x = Math.floor((e.clientX - rect.left) / cellSize);
         const y = Math.floor((e.clientY - rect.top) / cellSize);
 
@@ -188,6 +232,23 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
         }
         tooltip.classList.add('hidden');
     });
+
+    window.addEventListener('mouseup', () => {
+        isDrawing = false;
+        drawMode = null;
+    });
+
+    function applyStitch(e: MouseEvent) {
+        const rect = canvas.getBoundingClientRect();
+        const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
+        const x = Math.floor((e.clientX - rect.left) / cellSize);
+        const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
+            stitchedCells[y][x] = drawMode!; // Применяем режим (рисуем или стираем)
+            renderGrid(data);
+        }
+    }
 
     canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
 }

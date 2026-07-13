@@ -1,5 +1,5 @@
 import { uploadImage } from './api.js';
-import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions } from './ui.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions, initStitchedCells } from './ui.js';
 import { enrichPalette, getCountColor } from './palette.js';
 
 let currentPatternData: any = null;
@@ -69,7 +69,8 @@ async function generateImage(): Promise<void> {
         const rawCounts = getCountColor(data.grid);
         const datailedPalette = enrichPalette(rawCounts);
         renderPalette(datailedPalette, currentPatternData);
-        renderGrid(currentPatternData)
+        initStitchedCells(data.width, data.height);
+        renderGrid(currentPatternData);
         setupGridInteractions(currentPatternData, datailedPalette);
 
     } catch (error) {
