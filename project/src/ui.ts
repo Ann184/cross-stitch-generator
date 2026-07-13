@@ -65,17 +65,46 @@ export async function renderGrid(data:PatternData){
 
     ctx.clearRect(0,0, canvas.width, canvas.height);
 
+    // заливка крестиков
     for (let i = 0; i < data.height; i++) {
         for (let j = 0; j < data.width; j++) {
             ctx.fillStyle = data.grid[i][j];
             ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-            
-            ctx.strokeStyle = "#e0e0e0";
-            ctx.lineWidth = 0.5;
-            ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize)
+           
         }
     }
-    container.style.opacity = "1";
+
+    // рисуем сетку
+    ctx.lineWidth = 0.5;
+
+    // каждая 10 толце и темнее
+    for (let i = 1; i < data.height; i++) {
+        const isTen = i % 10 === 0;
+        ctx.strokeStyle = isTen ? "#141414" : "#333";
+        ctx.lineWidth = isTen ? 2 : 0.5;
+
+        ctx.setLineDash(isTen ? [10, 5] : []);
+        ctx.beginPath();
+        ctx.moveTo(0, i * cellSize);
+        ctx.lineTo(data.width * cellSize, i * cellSize);
+        ctx.stroke();
+    }
+
+    for (let j = 0; j < data.width; j++) {
+        const isTen = j % 10 === 0;
+        ctx.strokeStyle = isTen ? "#141414" : "#333";
+        ctx.lineWidth = isTen ? 2 : 0.5;
+
+        ctx.setLineDash(isTen ? [10, 5] : []);
+        ctx.beginPath();
+        ctx.moveTo(j * cellSize, 0);
+        ctx.lineTo(j * cellSize, data.height * cellSize);
+        ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.strokeStyle = "#141414";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(0, 0, data.width * cellSize, data.height * cellSize);
 }
 
 export function renderPalette(paletteList: PaletteCollor[]) {
