@@ -130,6 +130,8 @@ body, html {
     gap: 15px;
     background: #fff;
     border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .palette-list {
@@ -137,6 +139,11 @@ body, html {
     flex-direction: column;
     gap: 8px;
     padding: 10px;
+}
+
+.palette-row.selected { 
+    outline: 2px solid var(--accent-pink); 
+    background-color: #fff0f3;
 }
 
 .color-box {

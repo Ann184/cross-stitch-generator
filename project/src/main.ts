@@ -68,7 +68,7 @@ async function generateImage(): Promise<void> {
 
         const rawCounts = getCountColor(data.grid);
         const datailedPalette = enrichPalette(rawCounts);
-        renderPalette(datailedPalette);
+        renderPalette(datailedPalette, currentPatternData);
         renderGrid(currentPatternData)
         setupGridInteractions(currentPatternData, datailedPalette);
 

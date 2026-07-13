@@ -1,5 +1,7 @@
 import { PaletteCollor } from "./palette";
 
+let activeColorHex: string | null = null;
+
 export function toggleLoader(show: boolean) {
     const loader = document.getElementById("loader");
     loader?.classList.toggle('hidden', !show);
@@ -68,9 +70,20 @@ export async function renderGrid(data:PatternData){
     // заливка крестиков
     for (let i = 0; i < data.height; i++) {
         for (let j = 0; j < data.width; j++) {
-            ctx.fillStyle = data.grid[i][j];
+            const cellColor = data.grid[i][j];
+            ctx.fillStyle = cellColor;
             ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-           
+
+            if (activeColorHex && cellColor !== activeColorHex) {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+            }
+
+            if (activeColorHex === cellColor) {
+                ctx.strokeStyle = "#ff8da2";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(j * cellSize + 1, i * cellSize + 1, cellSize - 2, cellSize - 2);
+            }
         }
     }
 
@@ -107,7 +120,7 @@ export async function renderGrid(data:PatternData){
     ctx.strokeRect(0, 0, data.width * cellSize, data.height * cellSize);
 }
 
-export function renderPalette(paletteList: PaletteCollor[]) {
+export function renderPalette(paletteList: PaletteCollor[], patternData: any) {
     const container = document.getElementById('paletteContainer');
     if (!container) return;
 
@@ -131,6 +144,14 @@ export function renderPalette(paletteList: PaletteCollor[]) {
                 <span class="color-count">${item.count} крестиков</span>
             </div>
         `;
+
+        row.addEventListener('click', () => {
+            activeColorHex = (activeColorHex === item.hex) ? null : item.hex;
+            renderGrid(patternData);
+            document.querySelectorAll('.palette-row').forEach(el => el.classList.remove('selected'));
+            if (activeColorHex) row.classList.add('selected');
+        });
+
         container.appendChild(row);
     });
 }
