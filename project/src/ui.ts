@@ -244,11 +244,30 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
         const x = Math.floor((e.clientX - rect.left) / cellSize);
         const y = Math.floor((e.clientY - rect.top) / cellSize);
 
-        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
+        if (y >= 0 && y < stitchedCells.length && x >= 0 && x < stitchedCells[0].length) {
             stitchedCells[y][x] = drawMode!; // Применяем режим (рисуем или стираем)
+            saveProgress("current_pattern");
             renderGrid(data);
         }
     }
 
     canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+}
+
+// Сохранение состояний отметок
+export function saveProgress(patternId: string) {
+    localStorage.setItem(`stitched_${patternId}`, JSON.stringify(stitchedCells));
+}
+
+// Загрузка состояний отметок
+export function loadProgress(patternId: string, width: number, height: number) {
+    const saved = localStorage.getItem(`stitched_${patternId}`);
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.length === height && parsed[0]?.length === width) {
+            stitchedCells = parsed;
+            return;
+        }
+    }
+    initStitchedCells(width, height);
 }
