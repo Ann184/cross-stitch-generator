@@ -173,32 +173,28 @@ export function renderPalette(paletteList: PaletteCollor[], patternData: any) {
 }
 
 export function setupGridInteractions(data: PatternData, palette: PaletteCollor[]) {
-    const canvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
-    const tooltip = document.getElementById('tooltip');
-    if (!canvas || !tooltip) return;
+    let isShiftPressed = false;
+    window.addEventListener('keydown', (e) => { if (e.key === 'Shift') isShiftPressed = true; });
+    window.addEventListener('keyup', (e) => { if (e.key === 'Shift') isShiftPressed = false; });
 
-    let isDrawing = false;
-    let drawMode: boolean | null = null;
+    const oldCanvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    const tooltip = document.getElementById('tooltip');
+    if (!oldCanvas || !tooltip) return;
+
+    const newCanvas = oldCanvas.cloneNode(true) as HTMLCanvasElement;
+    oldCanvas.parentNode?.replaceChild(newCanvas, oldCanvas);
+
+    renderGrid(data);
+    const canvas = newCanvas;
 
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
+    let isDrawing = false;
+    let isDrawingMode = true;
+
     canvas.addEventListener('mousedown', (e) => {
         isDrawing = true;
-        const rect = canvas.getBoundingClientRect();
-        const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
-        
-        const x = Math.floor((e.clientX - rect.left) / cellSize);
-        const y = Math.floor((e.clientY - rect.top) / cellSize);
-
-        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
-            if (e.button === 0) {
-                stitchedCells[y][x] = true;
-            } else if (e.button === 2) {
-                stitchedCells[y][x] = false;
-            }
-            renderGrid(data);
-        }
-        drawMode = e.button === 0;
+        isDrawingMode = (e.button === 0); 
         applyStitch(e);
     });
 
@@ -208,7 +204,6 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
         }
         const rect = canvas.getBoundingClientRect();
         const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
-        
         const x = Math.floor((e.clientX - rect.left) / cellSize);
         const y = Math.floor((e.clientY - rect.top) / cellSize);
 
@@ -235,7 +230,6 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
 
     window.addEventListener('mouseup', () => {
         isDrawing = false;
-        drawMode = null;
     });
 
     function applyStitch(e: MouseEvent) {
@@ -244,12 +238,18 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
         const x = Math.floor((e.clientX - rect.left) / cellSize);
         const y = Math.floor((e.clientY - rect.top) / cellSize);
 
-        if (y >= 0 && y < stitchedCells.length && x >= 0 && x < stitchedCells[0].length) {
-            stitchedCells[y][x] = drawMode!; // Применяем режим (рисуем или стираем)
+        if (x >= 0 && x < data.width && y >= 0 && y < data.height) {
+            if (isShiftPressed) {
+                const targetColor = data.grid[y][x];
+                floodFill(x, y, targetColor, data, isDrawingMode);
+            } else {
+                stitchedCells[y][x] = isDrawingMode;
+            }
+            
             saveProgress("current_pattern");
             renderGrid(data);
         }
-    }
+}
 
     canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
 }
@@ -270,4 +270,23 @@ export function loadProgress(patternId: string, width: number, height: number) {
         }
     }
     initStitchedCells(width, height);
+}
+
+// Поиск и закрашивание соседних клеток 
+function floodFill(startX: number, startY: number, targetColor: string, data: any, fillValue: boolean) {
+    const queue = [{ x: startX, y: startY }];
+    const visited = new Set<string>();
+
+    while (queue.length > 0) {
+        const { x, y } = queue.shift()!;
+        const key = `${x},${y}`;
+
+        if (visited.has(key)) continue;
+        visited.add(key);
+
+        if (x >= 0 && x < data.width && y >= 0 && y < data.height && data.grid[y][x] === targetColor) {
+            stitchedCells[y][x] = fillValue;;
+            queue.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
+        }
+    }
 }
