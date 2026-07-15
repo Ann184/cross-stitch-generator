@@ -1,10 +1,11 @@
 import { uploadImage } from './api.js';
-import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions, loadProgress } from './ui.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions, loadProgress, initHelpModal } from './ui.js';
 import { enrichPalette, getCountColor } from './palette.js';
 
 let currentPatternData: any = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+    initHelpModal();
     document.getElementById("buttonGenerate")?.addEventListener("click", generateImage);
 
     document.querySelectorAll(".buttonZoom").forEach(btn =>{

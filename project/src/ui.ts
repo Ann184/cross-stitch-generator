@@ -290,3 +290,21 @@ function floodFill(startX: number, startY: number, targetColor: string, data: an
         }
     }
 }
+
+export function initHelpModal() {
+    const modal = document.getElementById('helpModal');
+    const helpLink = document.getElementById('helpLink');
+    const closeBtn = document.querySelector('.close-btn');
+
+    helpLink?.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal?.classList.remove('hidden');
+    });
+
+    closeBtn?.addEventListener('click', () => modal?.classList.add('hidden'));
+    
+    // Закрытие при клике на фон
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+    });
+}
