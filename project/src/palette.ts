@@ -69,3 +69,15 @@ export function enrichPalette(counts: PaletteCollor[]) {
         };
     });
 }
+
+export function getStitchedCountForColor(colorHex: string, data: any, stitchedCells: boolean[][]): number {
+    let count = 0;
+    for (let y = 0; y < data.height; y++) {
+        for (let x = 0; x < data.width; x++) {
+            if (data.grid[y][x] === colorHex && stitchedCells[y][x] === true) {
+                count++;
+            }
+        }
+    }
+    return count;
+}

@@ -1,4 +1,4 @@
-import { PaletteCollor } from "./palette";
+import { getStitchedCountForColor, PaletteCollor } from "./palette";
 
 let activeColorHex: string | null = null;
 let stitchedCells: boolean[][] = [];
@@ -149,6 +149,10 @@ export function renderPalette(paletteList: PaletteCollor[], patternData: any) {
 
         const row = document.createElement('div');
         row.className = 'palette-row';
+        if (activeColorHex === item.hex) row.classList.add('selected');
+
+        const stitchedCount = getStitchedCountForColor(item.hex, patternData, stitchedCells);
+        const progress = Math.round((stitchedCount / item.count) * 100);
         
         row.innerHTML = `
             <div class="color-box" style="background-color: ${rgbColor}"></div>
@@ -157,7 +161,10 @@ export function renderPalette(paletteList: PaletteCollor[], patternData: any) {
                     <span class="color-name">${item.name || 'Неизвестный'}</span>
                     <span class="color-dmc">DMC ${item.id || '---'}</span>
                 </div>
-                <span class="color-count">${item.count} крестиков</span>
+                <div class="color-stats">
+                    <span class="color-count">${stitchedCount} / ${item.count} кр.</span>
+                    <span class="color-progress">${progress}%</span>
+                </div>
             </div>
         `;
 
@@ -248,6 +255,7 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
             
             saveProgress("current_pattern");
             renderGrid(data);
+            renderPalette(palette, data);
         }
 }
 

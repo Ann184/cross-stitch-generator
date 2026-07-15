@@ -3,6 +3,7 @@ import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, rend
 import { enrichPalette, getCountColor } from './palette.js';
 
 let currentPatternData: any = null;
+let lastPalette: any = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     initHelpModal();
@@ -71,6 +72,7 @@ async function generateImage(): Promise<void> {
 
         const rawCounts = getCountColor(data.grid);
         const datailedPalette = enrichPalette(rawCounts);
+        lastPalette = datailedPalette;
         renderPalette(datailedPalette, currentPatternData);
         renderGrid(currentPatternData);
         setupGridInteractions(currentPatternData, datailedPalette);
