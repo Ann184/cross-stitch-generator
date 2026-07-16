@@ -245,15 +245,29 @@ button {
     transform: translateY(-2px); 
 }
 
-.buttonZoom { 
-    background-color: transparent; 
-    border: 1px solid var(--accent-pink); 
-    color: var(--accent-pink); 
-    margin-right: 10px; 
+.controls {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 15px;
 }
-.buttonZoom:hover { 
-    background-color: var(--accent-pink); 
-    color: white; 
+
+.tool-button {
+    flex: 1;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: transparent;
+    border: 1px solid var(--accent-pink);
+    color: var(--accent-pink);
+    transition: all 0.2s ease;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tool-button:hover {
+    background-color: var(--accent-pink);
+    color: white;
 }
 
 .custom-file-button {

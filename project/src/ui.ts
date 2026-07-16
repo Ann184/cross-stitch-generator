@@ -2,6 +2,9 @@ import { getStitchedCountForColor, PaletteCollor } from "./palette";
 
 let activeColorHex: string | null = null;
 let stitchedCells: boolean[][] = [];
+let history: boolean[][][] = [];
+let historyIndex = -1;
+let hasChanges = false;
 
 export function toggleLoader(show: boolean) {
     const loader = document.getElementById("loader");
@@ -184,6 +187,12 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
     window.addEventListener('keydown', (e) => { if (e.key === 'Shift') isShiftPressed = true; });
     window.addEventListener('keyup', (e) => { if (e.key === 'Shift') isShiftPressed = false; });
 
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+
+    undoBtn?.addEventListener('click', () => undo(data, palette));
+    redoBtn?.addEventListener('click', () => redo(data, palette));
+
     const oldCanvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
     const tooltip = document.getElementById('tooltip');
     if (!oldCanvas || !tooltip) return;
@@ -201,7 +210,9 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
 
     canvas.addEventListener('mousedown', (e) => {
         isDrawing = true;
+        hasChanges = false;
         isDrawingMode = (e.button === 0); 
+        saveHistory(stitchedCells);
         applyStitch(e);
     });
 
@@ -236,6 +247,10 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
     });
 
     window.addEventListener('mouseup', () => {
+        if (isDrawing && hasChanges) {
+            saveHistory(stitchedCells);
+            hasChanges = false;
+        }
         isDrawing = false;
     });
 
@@ -251,9 +266,9 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
                 floodFill(x, y, targetColor, data, isDrawingMode);
             } else {
                 stitchedCells[y][x] = isDrawingMode;
+                hasChanges = true;
             }
-            
-            saveProgress("current_pattern");
+
             renderGrid(data);
             renderPalette(palette, data);
         }
@@ -315,4 +330,55 @@ export function initHelpModal() {
     modal?.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.add('hidden');
     });
+}
+
+export function saveHistory(cells: boolean[][]) {
+    history = history.slice(0, historyIndex + 1);
+    const snapshot = cells.map(row => [...row]);
+    if (historyIndex === -1) {
+        history.push(snapshot);
+        historyIndex = 0;
+        return;
+    }
+    if (areArraysEqual(history[historyIndex], snapshot)) {
+        return; 
+    }
+    history = history.slice(0, historyIndex + 1);
+    history.push(snapshot);
+    historyIndex++;
+}
+
+function areArraysEqual(arr1: boolean[][], arr2: boolean[][]): boolean {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i].length !== arr2[i].length) return false;
+        for (let j = 0; j < arr1[i].length; j++) {
+            if (arr1[i][j] !== arr2[i][j]) return false;
+        }
+    }
+    return true;
+}
+
+export function undo(data: any, palette: PaletteCollor[]) {
+    if (historyIndex > 0) {
+        historyIndex--;
+        updateGridFromHistory(data, palette);
+    }
+}
+
+export function redo(data: any, palette: PaletteCollor[]) {
+    if (historyIndex < history.length - 1) {
+        historyIndex++;
+        updateGridFromHistory(data, palette);
+    }
+}
+
+export function updateGridFromHistory(data: any, palette: PaletteCollor[]) {
+    stitchedCells = history[historyIndex].map(row => [...row]);
+    renderGrid(data);
+    renderPalette(palette, data);
+}
+
+export function getStitchedCells(): boolean[][] {
+    return stitchedCells;
 }

@@ -1,5 +1,5 @@
 import { uploadImage } from './api.js';
-import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions, loadProgress, initHelpModal } from './ui.js';
+import { toggleLoader, setGenerateButtonState, renderGrid, zoomIn, zoomOut, renderPalette, setupGridInteractions, loadProgress, initHelpModal, saveHistory, initStitchedCells, getStitchedCells, undo, redo } from './ui.js';
 import { enrichPalette, getCountColor } from './palette.js';
 
 let currentPatternData: any = null;
@@ -67,8 +67,10 @@ async function generateImage(): Promise<void> {
 
         const data = await uploadImage(formData);
         currentPatternData = data;
+        initStitchedCells(data.width, data.height);
 
         loadProgress("current_pattern", data.width, data.height);
+        saveHistory(getStitchedCells());
 
         const rawCounts = getCountColor(data.grid);
         const datailedPalette = enrichPalette(rawCounts);
@@ -83,5 +85,17 @@ async function generateImage(): Promise<void> {
         setGenerateButtonState(false);
         toggleLoader(false);
     }
-    
 }
+
+window.addEventListener('keydown', (e) => {
+    if (!currentPatternData || !lastPalette) return;
+
+    if (e.ctrlKey && (e.key === 'z' || e.key === 'я')) {
+        e.preventDefault();
+        undo(currentPatternData, lastPalette);
+    }
+    if (e.ctrlKey && (e.key === 'y' || e.key === 'н')) {
+        e.preventDefault();
+        redo(currentPatternData, lastPalette);
+    }
+});

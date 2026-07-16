@@ -52,9 +52,11 @@
 
             <section class="card">
                 <h3>Масштаб</h3>
-                <div class="zoom-controls">
-                    <button type="button" class="buttonZoom" data-action="in">+</button>
-                    <button type="button" class="buttonZoom" data-action="out">-</button>
+                <div class="controls">
+                    <button class="buttonZoom tool-button" data-action="in">+</button>
+                    <button class="buttonZoom tool-button" data-action="out">-</button>
+                    <button id="undoBtn" class="tool-button" title="Отменить (Ctrl+Z)">↺</button>
+                    <button id="redoBtn" class="tool-button" title="Вернуть (Ctrl+Y)">↻</button>
                 </div>
             </section>
 
@@ -89,6 +91,7 @@
                 <li><b>ПКМ</b> — убрать крестик.</li>
                 <li><b>Shift + ЛКМ</b> — залить всю область текущим цветом.</li>
                 <li><b>Shift + ПКМ</b> — стереть всю область текущего цвета.</li>
+                <li><b>Ctrl+Z / Ctrl+Y</b> (или кнопки ↺ / ↻) — отмена и возврат действий.</li>
             </ul>
         </div>
     </div>
