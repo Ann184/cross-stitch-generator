@@ -279,20 +279,23 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
 
 // Сохранение состояний отметок
 export function saveProgress(patternId: string) {
-    localStorage.setItem(`stitched_${patternId}`, JSON.stringify(stitchedCells));
+    sessionStorage.setItem(`stitched_${patternId}`, JSON.stringify(getStitchedCells()));
 }
 
 // Загрузка состояний отметок
 export function loadProgress(patternId: string, width: number, height: number) {
-    const saved = localStorage.getItem(`stitched_${patternId}`);
+    const saved = sessionStorage.getItem(`stitched_${patternId}`);
     if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.length === height && parsed[0]?.length === width) {
-            stitchedCells = parsed;
-            return;
+        try {
+            const parsed = JSON.parse(saved);
+            if (parsed.length === height && parsed[0]?.length === width) {
+                return parsed; 
+            }
+        } catch (e) {
+            console.error("Ошибка при загрузке прогресса", e);
         }
     }
-    initStitchedCells(width, height);
+    return Array.from({ length: height }, () => Array(width).fill(false));
 }
 
 // Поиск и закрашивание соседних клеток 
@@ -381,4 +384,10 @@ export function updateGridFromHistory(data: any, palette: PaletteCollor[]) {
 
 export function getStitchedCells(): boolean[][] {
     return stitchedCells;
+}
+
+export function resetHistory() {
+    history = [];
+    historyIndex = -1;
+    hasChanges = false;
 }
