@@ -173,7 +173,6 @@ export function renderPalette(paletteList: PaletteCollor[], patternData: any) {
 
         row.addEventListener('click', () => {
             activeColorHex = (activeColorHex === item.hex) ? null : item.hex;
-            renderGrid(patternData);
             document.querySelectorAll('.palette-row').forEach(el => el.classList.remove('selected'));
             if (activeColorHex) row.classList.add('selected');
         });
@@ -264,12 +263,14 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
             if (isShiftPressed) {
                 const targetColor = data.grid[y][x];
                 floodFill(x, y, targetColor, data, isDrawingMode);
+                hasChanges = true;
+                renderGrid(data);
             } else {
                 stitchedCells[y][x] = isDrawingMode;
                 hasChanges = true;
+                drawSingleCell(x, y, data.grid[y][x], stitchedCells[y][x], data);
             }
 
-            renderGrid(data);
             renderPalette(palette, data);
         }
 }
@@ -390,4 +391,31 @@ export function resetHistory() {
     history = [];
     historyIndex = -1;
     hasChanges = false;
+}
+
+// Отрисовки только одной клетки
+export function drawSingleCell(x: number, y: number, color: string, isStitched: boolean, data: PatternData) {
+    const canvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const cellSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
+    
+    ctx.clearRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+    ctx.fillStyle = color;
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+    if (isStitched) {
+        ctx.strokeStyle = "#444";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        const padding = 5; 
+        ctx.moveTo(x * cellSize + padding, y * cellSize + padding);
+        ctx.lineTo(x * cellSize + cellSize - padding, y * cellSize + cellSize - padding);
+        ctx.moveTo(x * cellSize + cellSize - padding, y * cellSize + padding);
+        ctx.lineTo(x * cellSize + padding, y * cellSize + cellSize - padding);
+        ctx.stroke();
+    }
 }
