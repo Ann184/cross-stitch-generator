@@ -199,6 +199,9 @@ export function setupGridInteractions(data: PatternData, palette: PaletteCollor[
     const newCanvas = oldCanvas.cloneNode(true) as HTMLCanvasElement;
     oldCanvas.parentNode?.replaceChild(newCanvas, oldCanvas);
 
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn?.addEventListener('click', downloadScheme);
+
     renderGrid(data);
     const canvas = newCanvas;
 
@@ -418,4 +421,18 @@ export function drawSingleCell(x: number, y: number, color: string, isStitched: 
         ctx.lineTo(x * cellSize + padding, y * cellSize + cellSize - padding);
         ctx.stroke();
     }
+}
+
+export function downloadScheme() {
+    const canvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'embroidery-pattern.png';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
